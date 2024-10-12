@@ -46,7 +46,7 @@
 
 // Pose publishing
 #include "geometry_msgs/msg/pose_with_covariance_stamped.hpp"
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
 // Laser message
 #include "sensor_msgs/msg/laser_scan.hpp"

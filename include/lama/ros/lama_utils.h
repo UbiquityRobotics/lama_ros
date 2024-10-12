@@ -7,9 +7,9 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include <tf2_ros/message_filter.h>
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 #include "tf2/transform_datatypes.h"
-#include <tf2_sensor_msgs/tf2_sensor_msgs.h>
+#include "tf2_sensor_msgs/tf2_sensor_msgs.hpp"
 
 namespace lama_utils {
 
