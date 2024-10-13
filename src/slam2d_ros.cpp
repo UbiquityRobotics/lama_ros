@@ -403,6 +403,7 @@ void lama::Slam2DROS::publishCallback() {  // const rclcpp::TimerEvent &
 
 void lama::Slam2DROS::onGetMap(const std::shared_ptr <nav_msgs::srv::GetMap::Request> req,
                                  std::shared_ptr <nav_msgs::srv::GetMap::Response> res) {
+    static_cast<void>(req);  // To suppress compiler warning
     res->map.header.frame_id = global_frame_id_;
     res->map.header.stamp = ros_clock->now();
 
