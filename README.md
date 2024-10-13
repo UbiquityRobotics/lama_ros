@@ -9,7 +9,7 @@ Overview
 
 ROS integration of [LaMa]( https://github.com/iris-ua/iris_lama), a Localization and Mapping package from the **Intelligent Robotics and Systems** (IRIS) Laboratory, University of Aveiro. It provides 2D Localization and SLAM. It works great on a [TurtleBot2](https://www.turtlebot.com/turtlebot2/) with a [Raspberry Pi 3 Model B+](https://www.raspberrypi.org/products/raspberry-pi-3-model-b-plus/) and an Hokuyo (Rapid URG). It also works on a simulated [TurtleBot3](http://emanual.robotis.com/docs/en/platform/turtlebot3/ros2_setup/).
 
-#### Environment
+#### Environment (for ROS 2 Eloquent, not Jazzy)
 
 Use Docker if you want a containerized environment. A `Dockerfile` is supplied. If you are on an office network that blocks Google's DNS servers, [configure](https://stackoverflow.com/questions/44184496/configuring-options-for-docker-run/44184773#44184773) your DNS. It should be as simple as editing `/etc/docker/daemon.json` with your office's [DNS server](https://www.tecmint.com/find-my-dns-server-ip-address-in-linux/). 
 
@@ -32,13 +32,13 @@ cd dev_ws/src
 git clone https://github.com/iris-ua/iris_lama
 git clone https://github.com/iris-ua/iris_lama_ros
 cd iris_lama_ros
-git checkout eloquent-devel
+git checkout jazzy-devel
 cd ../ss
 colcon build
 . install/setup.bash
 ```
 
-The build was tested in the provided Dockerfile with **Ubuntu 18.04** and **ROS2 Eloquent**.
+The build was tested on **Ubuntu 24.04** and **ROS2 Jazzy**.
 
 ## SLAM nodes
 
