@@ -319,7 +319,7 @@ void lama::PFSlam2DROS::onLaserScan(sensor_msgs::msg::LaserScan::ConstSharedPtr 
         path_pub_->publish(path);
 
         RCLCPP_DEBUG(node->get_logger(), "Update time: %.3fms - NEFF: %.2f",
-                RCUTILS_NS_TO_MS((end-start).nanoseconds()), slam2d_->getNeff());
+                static_cast<double>(RCUTILS_NS_TO_MS((end-start).nanoseconds())), slam2d_->getNeff());
 	RCLCPP_DEBUG(node->get_logger(), "Sent TF Map->Odom");
     } else {
         // Nothing has change, therefore, republish the last transform.
@@ -542,6 +542,7 @@ bool lama::PFSlam2DROS::PatchMsgFromOccupancyMap(nav_msgs::msg::OccupancyGrid &m
 
 void lama::PFSlam2DROS::onGetMap(const std::shared_ptr <nav_msgs::srv::GetMap::Request> req,
                                  std::shared_ptr <nav_msgs::srv::GetMap::Response> res) {
+    static_cast<void>(req);  // To suppress compiler warning
     res->map.header.frame_id = global_frame_id_;
     res->map.header.stamp = ros_clock->now();
 
