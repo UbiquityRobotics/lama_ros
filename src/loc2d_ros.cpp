@@ -84,7 +84,7 @@ lama::Loc2DROS::Loc2DROS(const std::string &name) :
 
     // Wait for the result.
     auto result_future = client->async_send_request(request);
-    if (rclcpp::spin_until_future_complete(node, result_future) == rclcpp::executor::FutureReturnCode::SUCCESS)
+    if (rclcpp::spin_until_future_complete(node, result_future) == rclcpp::FutureReturnCode::SUCCESS)
     {
         RCLCPP_INFO(node->get_logger(), "Got map");
     } else {
