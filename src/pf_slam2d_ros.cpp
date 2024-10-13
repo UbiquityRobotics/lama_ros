@@ -40,81 +40,81 @@ lama::PFSlam2DROS::PFSlam2DROS(std::string name) :
 
     // Load parameters from the server.
     double tmp;
-    node->declare_parameter("global_frame_id");
-    node->get_parameter_or("global_frame_id", global_frame_id_, std::string("map"));
-    node->declare_parameter("odom_frame_id");
-    node->get_parameter_or("odom_frame_id", odom_frame_id_, std::string("odom"));
-    node->declare_parameter("base_frame_id");
-    node->get_parameter_or("base_frame_id", base_frame_id_, std::string("base_link"));
-    node->declare_parameter("scan_topic");
-    node->get_parameter_or("scan_topic", scan_topic_, std::string("/scan"));
-    node->declare_parameter("transform_tolerance");
-    node->get_parameter_or("transform_tolerance", tmp, 0.1);
+    node->declare_parameter("global_frame_id", "map");
+    global_frame_id_ = node->get_parameter("global_frame_id").as_string();
+    node->declare_parameter("odom_frame_id", "odom");
+    odom_frame_id_ = node->get_parameter("odom_frame_id").as_string();
+    node->declare_parameter("base_frame_id", "base_link");
+    base_frame_id_ = node->get_parameter("base_frame_id").as_string();
+    node->declare_parameter("scan_topic", "/scan");
+    scan_topic_ =  node->get_parameter("scan_topic").as_string();
+    node->declare_parameter("transform_tolerance", 0.1);
+    tmp = node->get_parameter("transform_tolerance").as_double();
     transform_tolerance_ = rclcpp::Duration::from_seconds(tmp);
 
     Vector2d pos;
-    node->declare_parameter("initial_pos_x");
-    node->get_parameter_or("initial_pos_x", pos[0], 0.0);
-    node->declare_parameter("initial_pos_y");
-    node->get_parameter_or("initial_pos_y", pos[1], 0.0);
-    node->declare_parameter("initial_pos_a");
-    node->get_parameter_or("initial_pos_a", tmp, 0.0);
+    node->declare_parameter("initial_pos_x", 0.0);
+    pos[0] = node->get_parameter("initial_pos_x").as_double();
+    node->declare_parameter("initial_pos_y", 0.0);
+    pos[1] = node->get_parameter("initial_pos_y").as_double();
+    node->declare_parameter("initial_pos_a", 0.0);
+    tmp = node->get_parameter("initial_pos_a").as_double();
     Pose2D prior(pos, tmp);
 
     PFSlam2D::Options options;
-    node->declare_parameter("srr");
-    node->get_parameter_or("srr", options.srr, 0.1);
-    node->declare_parameter("str");
-    node->get_parameter_or("str", options.str, 0.2);
-    node->declare_parameter("stt");
-    node->get_parameter_or("stt", options.stt, 0.1);
-    node->declare_parameter("srt");
-    node->get_parameter_or("srt", options.srt, 0.2);
-    node->declare_parameter("sigma");
-    node->get_parameter_or("sigma", options.meas_sigma, 0.05);
-    node->declare_parameter("lgain");
-    node->get_parameter_or("lgain", options.meas_sigma_gain, 3.0);
-    node->declare_parameter("d_thresh");
-    node->get_parameter_or("d_thresh", options.trans_thresh, 0.5);
-    node->declare_parameter("a_thresh");
-    node->get_parameter_or("a_thresh", options.rot_thresh, 0.25);
-    node->declare_parameter("l2_max");
-    node->get_parameter_or("l2_max", options.l2_max, 0.5);
-    node->declare_parameter("truncate");
-    node->get_parameter_or("truncate", options.truncated_ray, 0.0);
-    node->declare_parameter("resolution");
-    node->get_parameter_or("resolution", options.resolution, 0.05);
-    node->declare_parameter("strategy");
-    node->get_parameter_or("strategy", options.strategy, std::string("gn"));
-    node->declare_parameter("use_compression");
-    node->get_parameter_or("use_compression", options.use_compression, false);
-    node->declare_parameter("compression_algorithm");
-    node->get_parameter_or("compression_algorithm", options.calgorithm, std::string("zstd"));
-    node->declare_parameter("mrange");
-    node->get_parameter_or("mrange", max_range_, 16.0);
-    node->declare_parameter("threads");
-    node->get_parameter_or("threads", options.threads, -1);
+    node->declare_parameter("srr", 0.1);
+    options.srr = node->get_parameter("srr").as_double();
+    node->declare_parameter("str", 0.2);
+    options.str = node->get_parameter("str").as_double();
+    node->declare_parameter("stt", 0.1);
+    options.stt = node->get_parameter("stt").as_double();
+    node->declare_parameter("srt", 0.2);
+    options.srt = node->get_parameter("srt").as_double();
+    node->declare_parameter("sigma", 0.05);
+    options.meas_sigma = node->get_parameter("sigma").as_double();
+    node->declare_parameter("lgain", 3.0);
+    options.meas_sigma_gain = node->get_parameter("lgain").as_double();
+    node->declare_parameter("d_thresh", 0.5);
+    options.trans_thresh = node->get_parameter("d_thresh").as_double();
+    node->declare_parameter("a_thresh", 0.25);
+    options.rot_thresh = node->get_parameter("a_thresh").as_double();
+    node->declare_parameter("l2_max", 0.5);
+    options.l2_max = node->get_parameter("l2_max").as_double();
+    node->declare_parameter("truncate", 0.0);
+    options.truncated_ray = node->get_parameter("truncate").as_double();
+    node->declare_parameter("resolution", 0.05);
+    options.resolution = node->get_parameter("resolution").as_double();
+    node->declare_parameter("strategy", "gn");
+    options.strategy = node->get_parameter("strategy").as_string();
+    node->declare_parameter("use_compression", false);
+    options.use_compression = node->get_parameter("use_compression").as_bool();
+    node->declare_parameter("compression_algorithm", "zstd");
+    options.calgorithm = node->get_parameter("compression_algorithm").as_string();
+    node->declare_parameter("mrange", 16.0);
+    max_range_ = node->get_parameter("mrange").as_double();
+    node->declare_parameter("threads", -1);
+    options.threads = node->get_parameter("threads").as_int();
 
     int itmp;
-    node->declare_parameter("patch_size");
-    node->get_parameter_or("patch_size", itmp, 32);
+    node->declare_parameter("patch_size", 32);
+    itmp = node->get_parameter("patch_size").as_int();
     options.patch_size = itmp;
-    node->declare_parameter("particles");
-    node->get_parameter_or("particles", itmp, 30);
+    node->declare_parameter("particles", 30);
+    itmp = node->get_parameter("particles").as_int();
     options.particles = itmp;
-    node->declare_parameter("cache_size");
-    node->get_parameter_or("cache_size", itmp, 100);
+    node->declare_parameter("cache_size", 100);
+    itmp = node->get_parameter("cache_size").as_int();
     options.cache_size = itmp;
     // ros param does not have unsigned int??
-    node->declare_parameter("seed");
-    node->get_parameter_or("seed", tmp, 0.0);
+    node->declare_parameter("seed", 0.0);
+    tmp = node->get_parameter("seed").as_double();
     options.seed = tmp;
 
-    node->declare_parameter("create_summary");
-    node->get_parameter_or("create_summary", options.create_summary, false);
+    node->declare_parameter("create_summary", false);
+    options.create_summary = node->get_parameter("create_summary").as_bool();
 
-    node->declare_parameter("map_publish_period");
-    node->get_parameter_or("map_publish_period", tmp, 5.0);
+    node->declare_parameter("map_publish_period", 5.0);
+    tmp = node->get_parameter("map_publish_period").as_double();
     periodic_publish_ = node->create_wall_timer(
             std::chrono::duration_cast<std::chrono::nanoseconds>(
                     std::chrono::milliseconds(static_cast<int>(tmp * 1000))),
@@ -561,9 +561,8 @@ int main(int argc, char *argv[]) {
 
     rclcpp::init(argc, argv);
     lama::PFSlam2DROS slam2d_ros {"pf_slam2d_ros"};
-    slam2d_ros.node->declare_parameter("rosbag");
-    bool using_rosbag;
-    slam2d_ros.node->get_parameter("rosbag", using_rosbag);
+    slam2d_ros.node->declare_parameter("rosbag", false);
+    bool using_rosbag = slam2d_ros.node->get_parameter("rosbag").as_bool();
     if(using_rosbag) {
         RCLCPP_INFO(slam2d_ros.node->get_logger(), "Running SLAM in Rosbag Mode (offline)");
         RCLCPP_INFO(slam2d_ros.node->get_logger(), "After the rosbag has finished, wait up to 'map_publish_period' for the map to be published. Save your map and use ctrl-c to quit.");
