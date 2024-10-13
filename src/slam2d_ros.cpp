@@ -62,7 +62,7 @@ lama::Slam2DROS::Slam2DROS(std::string name) :
     Pose2D prior(pos, tmp);
 
     Slam2D::Options options;
-    node->declare_parameter("d_thresh", 0.5);
+    node->declare_parameter("d_thresh", 0.01);
     options.trans_thresh = node->get_parameter("d_thresh").as_double();
     node->declare_parameter("a_thresh", 0.25);
     options.rot_thresh = node->get_parameter("a_thresh").as_double();
