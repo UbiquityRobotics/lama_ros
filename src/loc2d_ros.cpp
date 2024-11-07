@@ -39,16 +39,16 @@ lama::Loc2DROS::Loc2DROS(const std::string &name) :
 
     // Load parameters from the server.
     double tmp;
-    node->declare_parameter("global_frame_id");
-    node->get_parameter_or("global_frame_id", global_frame_id_, std::string("map"));
-    node->declare_parameter("odom_frame_id");
-    node->get_parameter_or("odom_frame_id", odom_frame_id_, std::string("odom"));
-    node->declare_parameter("base_frame_id");
-    node->get_parameter_or("base_frame_id", base_frame_id_, std::string("base_link"));
-    node->declare_parameter("scan_topic");
-    node->get_parameter_or("scan_topic", scan_topic_, std::string("/scan"));
-    node->declare_parameter("transform_tolerance");
-    node->get_parameter_or("transform_tolerance", tmp, 0.1);
+    node->declare_parameter("global_frame_id", "map");
+    global_frame_id_ = node->get_parameter("global_frame_id").as_string();
+    node->declare_parameter("odom_frame_id", "odom");
+    odom_frame_id_ = node->get_parameter("odom_frame_id").as_string();
+    node->declare_parameter("base_frame_id", "base_link");
+    base_frame_id_ = node->get_parameter("base_frame_id").as_string();
+    node->declare_parameter("scan_topic", "/scan");
+    scan_topic_ = node->get_parameter("scan_topic").as_string();
+    node->declare_parameter("transform_tolerance", 0.1);
+    tmp = node->get_parameter("transform_tolerance").as_double();
     transform_tolerance_ = rclcpp::Duration::from_seconds(tmp);
 
     loc2d_ = std::make_shared<Loc2D>();
@@ -84,7 +84,7 @@ lama::Loc2DROS::Loc2DROS(const std::string &name) :
 
     // Wait for the result.
     auto result_future = client->async_send_request(request);
-    if (rclcpp::spin_until_future_complete(node, result_future) == rclcpp::executor::FutureReturnCode::SUCCESS)
+    if (rclcpp::spin_until_future_complete(node, result_future) == rclcpp::FutureReturnCode::SUCCESS)
     {
         RCLCPP_INFO(node->get_logger(), "Got map");
     } else {
@@ -253,19 +253,27 @@ void lama::Loc2DROS::onLaserScan(sensor_msgs::msg::LaserScan::ConstSharedPtr las
 void lama::Loc2DROS::InitLoc2DFromOccupancyGridMsg(const nav_msgs::msg::OccupancyGrid &msg) {
     Vector2d pos;
     double tmp;
-    node->get_parameter_or("initial_pos_x", pos[0], 0.0);
-    node->get_parameter_or("initial_pos_y", pos[1], 0.0);
-    node->get_parameter_or("initial_pos_a", tmp, 0.0);
+    node->declare_parameter("initial_pos_x", 0.0);
+    pos[0] = node->get_parameter("initial_pos_x").as_double();
+    node->declare_parameter("initial_pos_y", 0.0);
+    pos[1] = node->get_parameter("initial_pos_y").as_double();
+    node->declare_parameter("initial_pos_a", 0.0);
+    tmp = node->get_parameter("initial_pos_a").as_double();
     lama::Pose2D prior(pos, tmp);
 
     Loc2D::Options options;
-    node->get_parameter_or("d_thresh", options.trans_thresh, 0.01);
-    node->get_parameter_or("a_thresh", options.rot_thresh, 0.2);
-    node->get_parameter_or("l2_max", options.l2_max, 0.5);
-    node->get_parameter_or("strategy", options.strategy, std::string("gn"));
+    node->declare_parameter("d_thresh", 0.01);
+    options.trans_thresh = node->get_parameter("d_thresh").as_double();
+    node->declare_parameter("a_thresh", 0.2);
+    options.rot_thresh = node->get_parameter("a_thresh").as_double();
+    node->declare_parameter("l2_max", 0.5);
+    options.l2_max = node->get_parameter("l2_max").as_double();
+    node->declare_parameter("strategy", "gn");
+    options.strategy = node->get_parameter("strategy").as_string();
 
     int itmp;
-    node->get_parameter_or("patch_size", itmp, 32);
+    node->declare_parameter("patch_size", 32);
+    itmp = node->get_parameter("patch_size").as_int();
     options.patch_size = itmp;
 
     options.resolution = msg.info.resolution;

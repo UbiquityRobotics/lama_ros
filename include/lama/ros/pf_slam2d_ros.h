@@ -54,7 +54,7 @@
 #include "nav_msgs/srv/get_map.hpp"
 #include "nav_msgs/msg/path.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
 #include "lama/ros/lama_utils.h"
 #include <lama/pose3d.h>
