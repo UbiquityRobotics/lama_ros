@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.5)
-project(iris_lama_ros)
+project(lama_ros)
 
 # Default to release mode.
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-find_package(iris_lama REQUIRED)
+find_package(lama_core REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
 set(CMAKE_CXX_STANDARD 14)

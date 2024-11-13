@@ -4,7 +4,7 @@
     <arg name="initial_pose_y" default="0.0"/>
     <arg name="initial_yaw"  default="0.0"/>
 
-    <node pkg="iris_lama_ros" type="loc2d_ros" name="loc2d_ros" output="screen">
+    <node pkg="lama_ros" type="loc2d_ros" name="loc2d_ros" output="screen">
 
         <!-- The frame attached to the map (default: "map"). -->
         <param name="global_frame_id" value="map"/>
